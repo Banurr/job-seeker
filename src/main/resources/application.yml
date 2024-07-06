@@ -1,0 +1,25 @@
+spring:
+    application:
+        name: pet-project
+    jpa:
+        hibernate:
+            ddl-auto: update
+    datasource:
+        username: ${DB_USERNAME}
+        url: ${DB_URL}
+        password: ${DB_PASSWORD}
+server:
+    port: 8080
+
+logging:
+    level:
+        root: INFO
+    pattern:
+        file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+    file:
+        name: pet-project.log
+    logback:
+        rollingpolicy:
+            max-file-size: 10MB
+
+
