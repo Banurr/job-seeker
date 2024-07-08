@@ -20,7 +20,6 @@ public class CompanyController
     @ResponseStatus(HttpStatus.CREATED)
     public void createCompany(@Valid @RequestBody CompanyDto companyDto)
     {
-        System.out.println(companyDto);
         companyService.createCompany(companyDto);
     }
 
@@ -36,5 +35,20 @@ public class CompanyController
     public CompanyDto findCompanyById(@PathVariable(name = "id") Long id)
     {
         return companyService.findCompanyById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCompanyById(@PathVariable(name = "id") Long id)
+    {
+        companyService.deleteCompanyById(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateCompany(@PathVariable(name = "id") Long id,
+                              @Valid @RequestBody CompanyDto companyDto)
+    {
+        companyService.updateCompany(id,companyDto);
     }
 }

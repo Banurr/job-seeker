@@ -40,5 +40,20 @@ public class CompanyService
         return CompanyMapper.INSTANCE.toDto(company);
     }
 
+    public void deleteCompanyById(Long id)
+    {
+        companyRepository.deleteById(id);
+        log.info("Company with id {} was deleted",id);
+    }
 
+    public void updateCompany(Long id, CompanyDto companyDto)
+    {
+        Company company = companyRepository.findById(id).orElseThrow();
+        company.setName(companyDto.getName());
+        company.setDescription(companyDto.getDescription());
+        company.setIndustry(companyDto.getIndustry());
+        company.setWebsite(companyDto.getWebsite());
+        companyRepository.save(company);
+        log.info("Company with id {} was updated",id);
+    }
 }

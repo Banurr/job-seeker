@@ -1,34 +1,22 @@
-package com.banurr.pet_project.model;
+package com.banurr.pet_project.dto;
 
 import com.banurr.pet_project.enums.Format;
 import com.banurr.pet_project.enums.Level;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDate;
-
-@Entity
-@Table(name = "vacancies")
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class Vacancy
+@Getter
+@Setter
+public class VacancyResponse
 {
-    @Id
-    @GeneratedValue
-    private Long id;
-
     @NotBlank
     private String title;
 
     @NotBlank
     private String description;
-
-    @NotNull
-    private LocalDate dateOfPublication;
 
     @Enumerated(EnumType.STRING)
     private Level level;
@@ -49,6 +37,6 @@ public class Vacancy
     @Min(value = 0)
     private Integer maxSalary;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Company company;
+    @NotNull
+    private CompanyDto company;
 }
