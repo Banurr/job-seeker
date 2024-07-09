@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/company")
@@ -49,6 +48,6 @@ public class CompanyController
     public void updateCompany(@PathVariable(name = "id") Long id,
                               @Valid @RequestBody CompanyDto companyDto)
     {
-        companyService.updateCompany(id,companyDto);
+        companyService.updateCompany(id, companyDto);
     }
 }

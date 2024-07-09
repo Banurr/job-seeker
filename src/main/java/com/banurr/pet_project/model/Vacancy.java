@@ -2,11 +2,13 @@ package com.banurr.pet_project.model;
 
 import com.banurr.pet_project.enums.Format;
 import com.banurr.pet_project.enums.Level;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -18,7 +20,7 @@ import java.time.LocalDate;
 public class Vacancy
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -49,6 +51,8 @@ public class Vacancy
     @Min(value = 0)
     private Integer maxSalary;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ToString.Exclude
     private Company company;
 }

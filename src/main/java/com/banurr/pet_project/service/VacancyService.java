@@ -1,8 +1,7 @@
 package com.banurr.pet_project.service;
 
-import com.banurr.pet_project.dto.VacancyDto;
+import com.banurr.pet_project.dto.VacancyCreate;
 import com.banurr.pet_project.dto.VacancyResponse;
-import com.banurr.pet_project.mapper.CompanyMapper;
 import com.banurr.pet_project.mapper.VacancyMapper;
 import com.banurr.pet_project.model.Company;
 import com.banurr.pet_project.model.Vacancy;
@@ -39,10 +38,10 @@ public class VacancyService
         return VacancyMapper.INSTANCE.toResponseDto(vacancy);
     }
 
-    public void createVacancy(VacancyDto vacancyDto)
+    public void createVacancy(VacancyCreate vacancyCreate)
     {
-        Company company = companyRepository.findById(vacancyDto.getCompanyId()).orElseThrow();
-        Vacancy vacancy = VacancyMapper.INSTANCE.toEntity(vacancyDto);
+        Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow();
+        Vacancy vacancy = VacancyMapper.INSTANCE.toEntity(vacancyCreate);
         vacancy.setCompany(company);
         vacancy.setDateOfPublication(LocalDate.now());
         vacancyRepository.save(vacancy);
@@ -55,17 +54,17 @@ public class VacancyService
         log.info("Vacancy with id {} was deleted",id);
     }
 
-    public void updateVacancy(Long id, VacancyDto vacancyDto)
+    public void updateVacancy(Long id, VacancyCreate vacancyCreate)
     {
-        Company company = companyRepository.findById(vacancyDto.getCompanyId()).orElseThrow();
+        Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow();
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow();
-        vacancy.setLevel(vacancyDto.getLevel());
-        vacancy.setFormat(vacancyDto.getFormat());
-        vacancy.setDescription(vacancyDto.getDescription());
-        vacancy.setTitle(vacancyDto.getTitle());
+        vacancy.setLevel(vacancyCreate.getLevel());
+        vacancy.setFormat(vacancyCreate.getFormat());
+        vacancy.setDescription(vacancyCreate.getDescription());
+        vacancy.setTitle(vacancyCreate.getTitle());
         vacancy.setCompany(company);
-        vacancy.setYearsOfExperience(vacancyDto.getYearsOfExperience());
-        vacancy.setMinSalary(vacancyDto.getMinSalary());
+        vacancy.setYearsOfExperience(vacancyCreate.getYearsOfExperience());
+        vacancy.setMinSalary(vacancyCreate.getMinSalary());
         vacancy.setMaxSalary(vacancy.getMaxSalary());
         vacancyRepository.save(vacancy);
         log.info("Vacancy with id {} was updated",id);

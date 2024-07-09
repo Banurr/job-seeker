@@ -29,6 +29,11 @@ public class CompanyService
     public List<CompanyDto> getAllCompanies()
     {
         List<Company> companies = companyRepository.findAll();
+        for(Company company : companies)
+        {
+            System.out.println(company.getId() + " " +company.getVacancies());
+        }
+
         log.info("All companies were retrieved");
         return companies.stream().map(CompanyMapper.INSTANCE::toDto).toList();
     }

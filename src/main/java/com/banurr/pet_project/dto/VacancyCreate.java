@@ -2,7 +2,6 @@ package com.banurr.pet_project.dto;
 
 import com.banurr.pet_project.enums.Format;
 import com.banurr.pet_project.enums.Level;
-import com.banurr.pet_project.model.Company;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
@@ -13,7 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class VacancyDto
+public class VacancyCreate
 {
     @NotBlank
     private String title;

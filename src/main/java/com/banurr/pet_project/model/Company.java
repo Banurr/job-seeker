@@ -1,23 +1,23 @@
 package com.banurr.pet_project.model;
 
 import com.banurr.pet_project.enums.Industry;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "companies")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
+@Data
 public class Company
 {
     @Id
@@ -40,6 +40,8 @@ public class Company
     @NotBlank
     private String website;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Vacancy> vacancySet;
+    @ToString.Exclude
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Vacancy> vacancies;
 }

@@ -1,6 +1,6 @@
 package com.banurr.pet_project.controller;
 
-import com.banurr.pet_project.dto.VacancyDto;
+import com.banurr.pet_project.dto.VacancyCreate;
 import com.banurr.pet_project.dto.VacancyResponse;
 import com.banurr.pet_project.service.VacancyService;
 import jakarta.validation.Valid;
@@ -33,17 +33,17 @@ public class VacancyController
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createVacancy(@Valid @RequestBody VacancyDto vacancyDto)
+    public void createVacancy(@Valid @RequestBody VacancyCreate vacancyCreate)
     {
-        vacancyService.createVacancy(vacancyDto);
+        vacancyService.createVacancy(vacancyCreate);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateVacancy(@PathVariable(name = "id") Long id,
-                              @Valid @RequestBody VacancyDto vacancyDto)
+                              @Valid @RequestBody VacancyCreate vacancyCreate)
     {
-        vacancyService.updateVacancy(id,vacancyDto);
+        vacancyService.updateVacancy(id, vacancyCreate);
     }
 
     @DeleteMapping("/{id}")

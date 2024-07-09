@@ -12,15 +12,12 @@ spring:
 server:
     port: 8080
 
-logging:
-    level:
-        root: INFO
-    pattern:
-        file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
-    file:
-        name: pet-project.log
-    logback:
-        rollingpolicy:
-            max-file-size: 10MB
+#logging:
+#    level:
+#        root: INFO
+#    pattern:
+#        file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{35} - %msg%n"
+#    file:
+#        name: pet-project.log
 
 
