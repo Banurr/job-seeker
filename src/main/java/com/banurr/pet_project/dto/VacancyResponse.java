@@ -12,29 +12,31 @@ import lombok.Setter;
 @Setter
 public class VacancyResponse
 {
-    @NotBlank
+    @NotBlank(message = "Title can't be blank or null")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Description can't be blank or null")
     private String description;
 
     @Enumerated(EnumType.STRING)
     private Level level;
 
     @NotNull
-    @Min(value = 0)
-    @Max(value = 20)
+    @Min(value = 0,message = "Minimum years of experience is 0")
+    @Max(value = 20,message = "Maximum years of experience is 20")
     private Integer yearsOfExperience;
 
     @Enumerated(EnumType.STRING)
     private Format format;
 
     @NotNull
-    @Min(value = 0)
+    @Min(value = 0,message = "Minimal salary min value is 0")
+    @Max(value = Integer.MAX_VALUE, message = "Minimal salary max value is " + Integer.MAX_VALUE)
     private Integer minSalary;
 
     @NotNull
-    @Min(value = 0)
+    @Min(value = 0,message = "Maximal salary min value is 0")
+    @Max(value = Integer.MAX_VALUE, message = "Maximal salary max value is " + Integer.MAX_VALUE)
     private Integer maxSalary;
 
     @NotNull

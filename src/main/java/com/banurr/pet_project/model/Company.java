@@ -24,21 +24,21 @@ public class Company
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name can't be blank or null")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Description can't be blank or null")
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "Industry can't be null")
     private Industry industry;
+
+    @NotBlank(message = "Website can't be blank or null")
+    private String website;
 
     @NotNull
     private LocalDate dateOfRegistration;
-
-    @NotBlank
-    private String website;
 
     @ToString.Exclude
     @JsonManagedReference

@@ -5,6 +5,7 @@ import com.banurr.pet_project.service.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class CompanyController
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCompany(@Valid @RequestBody CompanyDto companyDto)
+    public void createCompany(@RequestBody @Valid CompanyDto companyDto)
     {
         companyService.createCompany(companyDto);
     }
