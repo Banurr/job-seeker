@@ -1,6 +1,8 @@
 package com.banurr.pet_project.controller;
 
 import com.banurr.pet_project.exception.CompanyNotFoundException;
+import com.banurr.pet_project.exception.PasswordsDoNotMatchException;
+import com.banurr.pet_project.exception.UserAlreadyExistsException;
 import com.banurr.pet_project.exception.VacancyNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +38,19 @@ public class GlobalExceptionHandler
     public ResponseEntity<String> handleVacancyNotFoundException(VacancyNotFoundException exception)
     {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(PasswordsDoNotMatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handlePasswordsDoNotMatchException(PasswordsDoNotMatchException exception)
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handlePasswordsDoNotMatchException(UserAlreadyExistsException exception)
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 }
