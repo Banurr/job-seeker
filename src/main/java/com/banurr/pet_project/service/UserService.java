@@ -9,6 +9,7 @@ import com.banurr.pet_project.model.Role;
 import com.banurr.pet_project.model.User;
 import com.banurr.pet_project.repository.RoleRepository;
 import com.banurr.pet_project.repository.UserRepository;
+import com.banurr.pet_project.security.JWTGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +37,9 @@ public class UserService implements UserDetailsService
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private JWTGenerator jwtGenerator;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -69,12 +73,13 @@ public class UserService implements UserDetailsService
         log.info("User with email {} was successfully registered",userRegisterDto.getEmail());
     }
 
-    public void loginUser(UserLoginDto userLoginDto, AuthenticationManager authenticationManager)
+    public String loginUser(UserLoginDto userLoginDto, AuthenticationManager authenticationManager)
     {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(),
                         userLoginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("User with email {} authenticated",userLoginDto.getEmail());
+        return jwtGenerator.generateToken(authentication);
     }
 }
