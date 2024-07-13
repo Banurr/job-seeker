@@ -11,12 +11,11 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 
-import com.banurr.pet_project.security.SecurityConstants.*;
-
 @Component
 public class JWTGenerator
 {
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+
     public String generateToken(Authentication authentication)
     {
         String email = authentication.getName();
