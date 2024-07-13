@@ -2,6 +2,7 @@ package com.banurr.pet_project.service;
 
 import com.banurr.pet_project.dto.UserLoginDto;
 import com.banurr.pet_project.dto.UserRegisterDto;
+import com.banurr.pet_project.exception.InvalidTokenException;
 import com.banurr.pet_project.exception.PasswordsDoNotMatchException;
 import com.banurr.pet_project.exception.UserAlreadyExistsException;
 import com.banurr.pet_project.mapper.UserMapper;
@@ -10,8 +11,11 @@ import com.banurr.pet_project.model.User;
 import com.banurr.pet_project.repository.RoleRepository;
 import com.banurr.pet_project.repository.UserRepository;
 import com.banurr.pet_project.security.JWTGenerator;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -40,6 +45,9 @@ public class UserService implements UserDetailsService
 
     @Autowired
     private JWTGenerator jwtGenerator;
+
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -81,5 +89,16 @@ public class UserService implements UserDetailsService
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("User with email {} authenticated",userLoginDto.getEmail());
         return jwtGenerator.generateToken(authentication);
+    }
+
+    public ResponseEntity<String> logoutUser(HttpServletRequest request)
+    {
+        String token = jwtGenerator.getJWTFromRequest(request);
+        if(!StringUtils.hasText(token) || !jwtGenerator.validateToken(token)) throw new InvalidTokenException("Invalid token");
+        tokenBlacklistService.blacklistToken(token);
+        String email = jwtGenerator.getEmailFromJWT(token);
+        SecurityContextHolder.clearContext();
+        log.info("User with email {} logged out",email);
+        return ResponseEntity.status(200).body("User logged out successfully");
     }
 }

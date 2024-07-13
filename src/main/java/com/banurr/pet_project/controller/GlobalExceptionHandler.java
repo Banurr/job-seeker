@@ -1,9 +1,6 @@
 package com.banurr.pet_project.controller;
 
-import com.banurr.pet_project.exception.CompanyNotFoundException;
-import com.banurr.pet_project.exception.PasswordsDoNotMatchException;
-import com.banurr.pet_project.exception.UserAlreadyExistsException;
-import com.banurr.pet_project.exception.VacancyNotFoundException;
+import com.banurr.pet_project.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -19,9 +16,17 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler
 {
-    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    @ExceptionHandler(InvalidTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<String> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception) {
+    public ResponseEntity<String> handleInvalidTokenException(InvalidTokenException exception)
+    {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(TokenBlackListedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> handleTokenBlackListedException(TokenBlackListedException exception)
+    {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exception.getMessage());
     }
 

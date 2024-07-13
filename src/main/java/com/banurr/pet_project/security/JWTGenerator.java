@@ -1,12 +1,15 @@
 package com.banurr.pet_project.security;
 
+import com.banurr.pet_project.exception.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -47,8 +50,19 @@ public class JWTGenerator
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
-            throw new AuthenticationCredentialsNotFoundException("JWT was expired or incorrect");
+        } catch (Exception ex)
+        {
+            throw new InvalidTokenException("JWT was expired or incorrect");
         }
+    }
+
+    public String getJWTFromRequest(HttpServletRequest request)
+    {
+        String bearerToken = request.getHeader("Authorization");
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
+        {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
