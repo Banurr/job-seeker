@@ -5,6 +5,7 @@ import com.banurr.pet_project.service.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CompanyController
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void createCompany(@RequestBody @Valid CompanyDto companyDto)
     {
         companyService.createCompany(companyDto);
@@ -25,6 +27,7 @@ public class CompanyController
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public List<CompanyDto> getAllCompanies()
     {
         return companyService.getAllCompanies();
@@ -32,6 +35,7 @@ public class CompanyController
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public CompanyDto findCompanyById(@PathVariable(name = "id") Long id)
     {
         return companyService.findCompanyById(id);
@@ -39,6 +43,7 @@ public class CompanyController
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCompanyById(@PathVariable(name = "id") Long id)
     {
         companyService.deleteCompanyById(id);
@@ -46,6 +51,7 @@ public class CompanyController
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCompany(@PathVariable(name = "id") Long id,
                               @Valid @RequestBody CompanyDto companyDto)
     {

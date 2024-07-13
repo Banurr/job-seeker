@@ -50,8 +50,7 @@ public class SecurityConfig
         http.csrf(AbstractHttpConfigurer::disable);
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(sessionManagementConfigurer ->

@@ -87,14 +87,14 @@ public class UserService implements UserDetailsService
                 new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(),
                         userLoginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.info("User with email {} authenticated",userLoginDto.getEmail());
+        log.info("User with email {} logged in",userLoginDto.getEmail());
         return jwtGenerator.generateToken(authentication);
     }
 
     public ResponseEntity<String> logoutUser(HttpServletRequest request)
     {
         String token = jwtGenerator.getJWTFromRequest(request);
-        if(!StringUtils.hasText(token) || !jwtGenerator.validateToken(token)) throw new InvalidTokenException("Invalid token");
+        if(!StringUtils.hasText(token) || !jwtGenerator.validateToken(token)) throw new InvalidTokenException("Invalid token format");
         tokenBlacklistService.blacklistToken(token);
         String email = jwtGenerator.getEmailFromJWT(token);
         SecurityContextHolder.clearContext();

@@ -6,6 +6,7 @@ import com.banurr.pet_project.service.VacancyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class VacancyController
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public List<VacancyResponse> getAllVacancies()
     {
         return vacancyService.getAllVacancies();
@@ -26,6 +28,7 @@ public class VacancyController
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public VacancyResponse findVacancyById(@PathVariable(name = "id") Long id)
     {
         return vacancyService.findVacancyById(id);
@@ -33,6 +36,7 @@ public class VacancyController
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
     public void createVacancy(@Valid @RequestBody VacancyCreate vacancyCreate)
     {
         vacancyService.createVacancy(vacancyCreate);
@@ -40,6 +44,7 @@ public class VacancyController
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
     public void updateVacancy(@PathVariable(name = "id") Long id,
                               @Valid @RequestBody VacancyCreate vacancyCreate)
     {
@@ -48,6 +53,7 @@ public class VacancyController
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
     public void deleteVacancy(@PathVariable(name = "id") Long id)
     {
         vacancyService.deleteVacancyById(id);

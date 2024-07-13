@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -52,7 +51,7 @@ public class JWTGenerator
             return true;
         } catch (Exception ex)
         {
-            throw new InvalidTokenException("JWT was expired or incorrect");
+            throw new InvalidTokenException("Invalid token format");
         }
     }
 
