@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -100,5 +101,12 @@ public class UserService implements UserDetailsService
         SecurityContextHolder.clearContext();
         log.info("User with email {} logged out",email);
         return ResponseEntity.status(200).body("User logged out successfully");
+    }
+
+    public User getCurrentUser()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication instanceof AnonymousAuthenticationToken) return null;
+        return (User) authentication.getPrincipal();
     }
 }

@@ -3,11 +3,13 @@ package com.banurr.pet_project.model;
 import com.banurr.pet_project.enums.Format;
 import com.banurr.pet_project.enums.Level;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "vacancies")
@@ -55,4 +57,9 @@ public class Vacancy
     @JsonBackReference
     @ToString.Exclude
     private Company company;
+
+    @ToString.Exclude
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vacancy",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Application> applications;
 }
