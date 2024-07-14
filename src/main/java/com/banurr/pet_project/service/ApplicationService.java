@@ -27,6 +27,15 @@ public class ApplicationService
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailService emailService;
+
+    private final String creation = "Your application created successfully";
+
+    private final String rejection = "You application was rejected";
+
+    private final String accepted = "You application was accepted";
+
     public void createApplication(Long id, MultipartFile multipartFile) throws IOException
     {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()-> new VacancyNotFoundException("Vacancy with id " + id + " not found"));
@@ -39,6 +48,8 @@ public class ApplicationService
                 .vacancy(vacancy)
                 .build();
         Application result = applicationRepository.save(application);
+        String textOfCreation = "Good day\nYou applied your resume to the Job-Seeker platform\nYour application to the " + vacancy.getTitle() + " vacancy, of company " + vacancy.getCompany().getName() + " was created successfully.\nPlease wait for the response\n\nSincerely, Job-Seeker team";
+        emailService.sendEmail(email,creation,textOfCreation);
         log.info("Application {} was created", result);
     }
 
@@ -58,6 +69,8 @@ public class ApplicationService
         Application application = findApplicationById(id);
         application.setApplicationStatus(ApplicationStatus.ACCEPTED);
         applicationRepository.save(application);
+        String textOfAccepted = "Hello, nice news for you\nYour application to the vacancy " + application.getVacancy().getTitle() + " of the company " + application.getVacancy().getCompany().getName() + " was accepted and HR is ready to call you on an interview\n\nSincerely, Job-Seeker team";
+        emailService.sendEmail(application.getEmail(),accepted,textOfAccepted);
         log.info("Application with {} was accepted",id);
     }
 
@@ -66,6 +79,8 @@ public class ApplicationService
         Application application = findApplicationById(id);
         application.setApplicationStatus(ApplicationStatus.REJECTED);
         applicationRepository.save(application);
+        String textOfRejected = "Hello, some updates\nUnfortunately\nYour application to the vacancy " + application.getVacancy().getTitle() + " of the company" + application.getVacancy().getCompany().getName() + " was rejected.But your resume was added to the archive, so we can contact you later\n\nSincerely, Job-Seeker team";
+        emailService.sendEmail(application.getEmail(),rejection,textOfRejected);
         log.info("Application with {} was rejected",id);
     }
 }
