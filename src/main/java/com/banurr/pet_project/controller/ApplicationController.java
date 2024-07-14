@@ -1,5 +1,7 @@
 package com.banurr.pet_project.controller;
 
+import com.banurr.pet_project.dto.ApplicationView;
+import com.banurr.pet_project.mapper.ApplicationMapper;
 import com.banurr.pet_project.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,5 +25,29 @@ public class ApplicationController
                                   @RequestParam("resume") MultipartFile multipartFile) throws IOException
     {
         applicationService.createApplication(id,multipartFile);
+    }
+
+    @GetMapping("/{applicationId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
+    public ApplicationView findApplicationById(@PathVariable(name = "applicationId") Long id)
+    {
+        return ApplicationMapper.INSTANCE.toDto(applicationService.findApplicationById(id));
+    }
+
+    @PutMapping("/accept/{applicationId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
+    public void acceptApplicationById(@PathVariable(name = "applicationId") Long id)
+    {
+        applicationService.acceptApplication(id);
+    }
+
+    @PutMapping("/reject/{applicationId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
+    public void rejectApplicationById(@PathVariable(name = "applicationId") Long id)
+    {
+        applicationService.rejectApplication(id);
     }
 }
