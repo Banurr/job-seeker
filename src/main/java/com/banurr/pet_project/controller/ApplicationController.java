@@ -1,7 +1,6 @@
 package com.banurr.pet_project.controller;
 
 import com.banurr.pet_project.dto.ApplicationView;
-import com.banurr.pet_project.mapper.ApplicationMapper;
 import com.banurr.pet_project.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,8 @@ public class ApplicationController
     @PreAuthorize("isAuthenticated()")
     public ApplicationView findApplicationById(@PathVariable(name = "applicationId") Long id)
     {
-        return ApplicationMapper.INSTANCE.toDto(applicationService.findApplicationById(id));
+
+        return applicationService.retrieveApplicationById(id);
     }
 
     @PutMapping("/accept/{applicationId}")

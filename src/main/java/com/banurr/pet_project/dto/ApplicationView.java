@@ -23,5 +23,5 @@ public class ApplicationView
     private String email;
 
     @NotNull
-    private VacancyResponse vacancyResponse;
+    private VacancyResponse vacancy;
 }

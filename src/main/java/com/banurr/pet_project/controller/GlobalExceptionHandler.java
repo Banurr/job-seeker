@@ -18,6 +18,12 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler
 {
 
+    @ExceptionHandler(VacancyAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleVacancyAlreadyExistsException()
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You already have application to this vacancy");
+    }
     @ExceptionHandler(ApplicationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleApplicationNotFoundException(ApplicationNotFoundException exception)

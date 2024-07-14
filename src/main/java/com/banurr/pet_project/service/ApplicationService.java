@@ -1,8 +1,11 @@
 package com.banurr.pet_project.service;
 
+import com.banurr.pet_project.dto.ApplicationView;
 import com.banurr.pet_project.enums.ApplicationStatus;
 import com.banurr.pet_project.exception.ApplicationNotFoundException;
+import com.banurr.pet_project.exception.VacancyAlreadyExistsException;
 import com.banurr.pet_project.exception.VacancyNotFoundException;
+import com.banurr.pet_project.mapper.ApplicationMapper;
 import com.banurr.pet_project.model.Application;
 import com.banurr.pet_project.model.Vacancy;
 import com.banurr.pet_project.repository.ApplicationRepository;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Service
 @Slf4j
@@ -41,6 +45,11 @@ public class ApplicationService
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()-> new VacancyNotFoundException("Vacancy with id " + id + " not found"));
         byte[] resume = multipartFile.getBytes();
         String email = userService.getCurrentUser().getEmail();
+        if(applicationRepository.existsApplicationByEmailAndVacancy(email,vacancy))
+        {
+            log.error("User with email {} already have application on vacancy with id {}",email,vacancy.getId());
+            throw new VacancyAlreadyExistsException("Application from user with email " + email + " to the vacancy with id " + vacancy.getId() + " already exists");
+        }
         Application application = Application.builder()
                 .email(email)
                 .resume(resume)
@@ -64,6 +73,14 @@ public class ApplicationService
         return application;
     }
 
+    public ApplicationView retrieveApplicationById(Long id)
+    {
+        Application application = findApplicationById(id);
+        ApplicationView applicationView = ApplicationMapper.INSTANCE.toDto(application);
+        applicationView.setResume(Base64.getEncoder().encodeToString(applicationView.getResume()).getBytes());
+        return applicationView;
+    }
+
     public void acceptApplication(Long id)
     {
         Application application = findApplicationById(id);
@@ -83,4 +100,6 @@ public class ApplicationService
         emailService.sendEmail(application.getEmail(),rejection,textOfRejected);
         log.info("Application with {} was rejected",id);
     }
+
+
 }
