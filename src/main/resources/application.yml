@@ -3,7 +3,7 @@ spring:
         name: pet-project
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
         show-sql: true
     datasource:
         username: ${DB_USERNAME}
@@ -13,7 +13,7 @@ spring:
         url: ${DB_URL}
         user: ${DB_USERNAME}
         password: ${DB_PASSWORD}
-        locations: classpath:db/migration
+        locations: classpath:db
     mail:
         host: smtp.gmail.com
         port: 587

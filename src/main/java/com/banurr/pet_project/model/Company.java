@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "COMPANIES")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,22 +20,28 @@ public class Company
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID",nullable = false,unique = true)
     private Long id;
 
     @NotBlank(message = "Name can't be blank or null")
+    @Column(name = "NAME",nullable = false)
     private String name;
 
     @NotBlank(message = "Description can't be blank or null")
+    @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Industry can't be null")
+    @Column(name = "INDUSTRY", nullable = false)
     private Industry industry;
 
     @NotBlank(message = "Website can't be blank or null")
+    @Column(name = "WEBSITE", nullable = false)
     private String website;
 
     @NotNull
+    @Column(name = "DATE_OF_REGISTRATION", nullable = false)
     private LocalDate dateOfRegistration;
 
     @ToString.Exclude
