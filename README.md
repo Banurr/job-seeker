@@ -36,3 +36,13 @@ Welcome to **Job Seeker**, a comprehensive job-seeking platform designed to conn
 - **DTOs and Mappers**: For secure data transfer.
 - **Docker**: For containerization.
 - **Docker Compose**: For orchestrating multi-container applications.
+
+## Getting Started
+
+### Prerequisites
+
+- Java 17
+- Maven
+- PostgreSQL
+- Docker
+- Docker Compose
