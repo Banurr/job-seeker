@@ -1,0 +1,23 @@
+services:
+    backend:
+        image: 'job-seeker'
+        container_name: 'job-seeker_back'
+        depends_on:
+            - database
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/job-seeker
+            - SPRING_DATASOURCE_USERNAME=postgres
+            - SPRING_DATASOURCE_PASSWORD=postgres
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+            - SPRING_JPA_SHOW_SQL=true
+        ports:
+            - 8080:8080
+    database:
+        image: 'postgres'
+        container_name: 'job-seeker_db'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=job-seeker
+        ports:
+            - 1234:5432
