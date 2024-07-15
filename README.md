@@ -13,9 +13,6 @@ Welcome to **Job Seeker**, a comprehensive job-seeking platform designed to conn
 - [Docker Setup](#docker-setup)
   - [Docker Installation](#docker-installation)
   - [Docker Compose](#docker-compose)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
