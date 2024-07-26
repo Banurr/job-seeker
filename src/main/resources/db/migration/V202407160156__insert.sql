@@ -1,4 +1,3 @@
--- Check if ROLE_USER exists before inserting
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM ROLES WHERE NAME = 'ROLE_USER') THEN
@@ -14,15 +13,14 @@ END IF;
 END IF;
 END $$;
 
--- Insert admin user if not exists
+
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM USERS WHERE EMAIL = 'admin@example.com') THEN
         INSERT INTO USERS (NAME, SURNAME, EMAIL, PASSWORD, DATE_OF_REGISTRATION)
         VALUES ('Admin', 'User', 'admin@example.com', '$2a$12$BqZzJSnhRkRYBPTW7K3eLOWlpJPCsGmvY5QcMJb/IZ/XKR2uVT2Xe', CURRENT_TIMESTAMP);
 
-        -- Assign ROLE_ADMIN to the admin user
-INSERT INTO USERS_ROLES (USER_ID, ROLE_ID)
+INSERT INTO USERS_ROLES (USER_ID, ROLES_ID)
 SELECT ID, (SELECT ID FROM ROLES WHERE NAME = 'ROLE_ADMIN') FROM USERS WHERE EMAIL = 'admin@example.com';
 END IF;
 END $$;
