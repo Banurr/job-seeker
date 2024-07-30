@@ -19,7 +19,7 @@ public class CompanyController
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void createCompany(@RequestBody @Valid CompanyDto companyDto)
     {
         companyService.createCompany(companyDto);
@@ -27,7 +27,7 @@ public class CompanyController
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public List<CompanyDto> getAllCompanies()
     {
         return companyService.getAllCompanies();
@@ -35,7 +35,7 @@ public class CompanyController
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public CompanyDto findCompanyById(@PathVariable(name = "id") Long id)
     {
         return companyService.findCompanyById(id);
@@ -43,7 +43,7 @@ public class CompanyController
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCompanyById(@PathVariable(name = "id") Long id)
     {
         companyService.deleteCompanyById(id);
@@ -51,7 +51,7 @@ public class CompanyController
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCompany(@PathVariable(name = "id") Long id,
                               @Valid @RequestBody CompanyDto companyDto)
     {

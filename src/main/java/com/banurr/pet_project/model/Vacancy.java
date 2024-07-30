@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-public class Vacancy
+public class Vacancy implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

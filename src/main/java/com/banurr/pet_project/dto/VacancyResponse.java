@@ -8,9 +8,11 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class VacancyResponse
+public class VacancyResponse implements Serializable
 {
     @NotBlank(message = "Title can't be blank or null")
     private String title;

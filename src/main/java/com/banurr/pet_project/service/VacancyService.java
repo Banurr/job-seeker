@@ -11,6 +11,9 @@ import com.banurr.pet_project.repository.CompanyRepository;
 import com.banurr.pet_project.repository.VacancyRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,7 @@ public class VacancyService
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Cacheable(value = "vacancies", key = "'allVacancies'")
     public List<VacancyResponse> getAllVacancies()
     {
         List<Vacancy> vacancies = vacancyRepository.findAll();
@@ -34,8 +38,10 @@ public class VacancyService
         return vacancies.stream().map(VacancyMapper.INSTANCE::toResponseDto).toList();
     }
 
+    @Cacheable(value = "vacancies", key = "#id")
     public VacancyResponse findVacancyById(Long id)
     {
+        log.info("Id :: {}",id);
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()->
         {
             log.error("Vacancy with id {}, was not found",id);
@@ -46,17 +52,25 @@ public class VacancyService
     }
 
     @Transactional
-    public void createVacancy(VacancyCreate vacancyCreate)
+    @CachePut(value = "vacancies", key = "#result.id")
+    @CacheEvict(value = "vacancies", key = "'allVacancies'")
+    public Vacancy createVacancy(VacancyCreate vacancyCreate)
     {
-        Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow();
+        Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow(()->
+        {
+            log.error("Company with id {}, was not found",vacancyCreate.getCompanyId());
+            return new CompanyNotFoundException("Not found company with id " + vacancyCreate.getCompanyId());
+        });
         Vacancy vacancy = VacancyMapper.INSTANCE.toEntity(vacancyCreate);
         vacancy.setCompany(company);
         vacancy.setDateOfPublication(LocalDate.now());
         vacancyRepository.save(vacancy);
         log.info("Vacancy {} was created",vacancy);
+        return vacancy;
     }
 
     @Transactional
+    @CacheEvict(value = "vacancies", allEntries = true)
     public void deleteVacancyById(Long id)
     {
         if(!vacancyRepository.existsById(id))
@@ -69,12 +83,14 @@ public class VacancyService
     }
 
     @Transactional
+    @CachePut(value = "vacancies", key = "#id")
+    @CacheEvict(value = "vacancies", key = "'allVacancies'")
     public void updateVacancy(Long id, VacancyCreate vacancyCreate)
     {
         Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow(()->
         {
-            log.error("Company with id {}, was not found",id);
-            return new CompanyNotFoundException("Not found company with id " + id);
+            log.error("Company with id {}, was not found",vacancyCreate.getCompanyId());
+            return new CompanyNotFoundException("Not found company with id " + vacancyCreate.getCompanyId());
         });
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()->
         {
