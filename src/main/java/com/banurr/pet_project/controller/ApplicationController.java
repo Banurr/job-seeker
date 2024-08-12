@@ -29,8 +29,7 @@ public class ApplicationController
     @GetMapping("/{applicationId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
-    public ApplicationView findApplicationById(@PathVariable(name = "applicationId") Long id)
-    {
+    public ApplicationView findApplicationById(@PathVariable(name = "applicationId") Long id) throws Exception {
 
         return applicationService.retrieveApplicationById(id);
     }
@@ -38,16 +37,14 @@ public class ApplicationController
     @PutMapping("/accept/{applicationId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
-    public void acceptApplicationById(@PathVariable(name = "applicationId") Long id)
-    {
+    public void acceptApplicationById(@PathVariable(name = "applicationId") Long id) throws Exception {
         applicationService.acceptApplication(id);
     }
 
     @PutMapping("/reject/{applicationId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
-    public void rejectApplicationById(@PathVariable(name = "applicationId") Long id)
-    {
+    public void rejectApplicationById(@PathVariable(name = "applicationId") Long id) throws Exception {
         applicationService.rejectApplication(id);
     }
 }

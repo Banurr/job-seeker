@@ -43,11 +43,13 @@ public class ApplicationService
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()-> new VacancyNotFoundException("Vacancy with id " + id + " not found"));
         InputStream inputStream = multipartFile.getInputStream();
         String email = userService.getCurrentUser().getEmail();
+
         if(applicationRepository.existsApplicationByEmailAndVacancy(email,vacancy))
         {
             log.error("User with email {} already have application on vacancy with id {}",email,vacancy.getId());
             throw new VacancyAlreadyExistsException("Application from user with email " + email + " to the vacancy with id " + vacancy.getId() + " already exists");
         }
+
         String randomId = UUID.randomUUID().toString();
         Application application = Application.builder()
                 .email(email)
@@ -65,27 +67,25 @@ public class ApplicationService
         log.info("Application {} was created", result);
     }
 
-    public Application findApplicationById(Long id)
-    {
+    public Application findApplicationById(Long id) throws Exception {
         Application application = applicationRepository.findById(id).orElseThrow(()->
         {
             log.error("Application with id {} was not found",id);
             return new ApplicationNotFoundException("Application with id " + id + " was not found");
         });
+        byte[] file = minioService.getResumeFromS3(application.getResume());
         log.info("Application with id {} was retrieved ",id);
         return application;
     }
 
-    public ApplicationView retrieveApplicationById(Long id)
-    {
+    public ApplicationView retrieveApplicationById(Long id) throws Exception{
         Application application = findApplicationById(id);
         ApplicationView applicationView = ApplicationMapper.INSTANCE.toDto(application);
         applicationView.setResume(applicationView.getResume());
         return applicationView;
     }
 
-    public void acceptApplication(Long id)
-    {
+    public void acceptApplication(Long id) throws Exception {
         Application application = findApplicationById(id);
         application.setApplicationStatus(ApplicationStatus.ACCEPTED);
         applicationRepository.save(application);
@@ -95,8 +95,7 @@ public class ApplicationService
         log.info("Application with {} was accepted",id);
     }
 
-    public void rejectApplication(Long id)
-    {
+    public void rejectApplication(Long id) throws Exception {
         Application application = findApplicationById(id);
         application.setApplicationStatus(ApplicationStatus.REJECTED);
         applicationRepository.save(application);

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,7 @@ public class VacancyService
     @Autowired
     private CompanyRepository companyRepository;
 
-    @Cacheable(value = "vacancies", key = "'allVacancies'")
+    @CachePut("vacancies")
     public List<VacancyResponse> getAllVacancies()
     {
         List<Vacancy> vacancies = vacancyRepository.findAll();
@@ -38,7 +37,7 @@ public class VacancyService
         return vacancies.stream().map(VacancyMapper.INSTANCE::toResponseDto).toList();
     }
 
-    @Cacheable(value = "vacancies", key = "#id")
+    @CachePut(value = "vacancies", key = "#id")
     public VacancyResponse findVacancyById(Long id)
     {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()->
@@ -51,9 +50,7 @@ public class VacancyService
     }
 
     @Transactional
-    @CachePut(value = "vacancies", key = "#result.id")
-    @CacheEvict(value = "vacancies", key = "'allVacancies'")
-    public Vacancy createVacancy(VacancyCreate vacancyCreate)
+    public void createVacancy(VacancyCreate vacancyCreate)
     {
         Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow(()->
         {
@@ -63,13 +60,16 @@ public class VacancyService
         Vacancy vacancy = VacancyMapper.INSTANCE.toEntity(vacancyCreate);
         vacancy.setCompany(company);
         vacancy.setDateOfPublication(LocalDate.now());
-        vacancyRepository.save(vacancy);
+        Vacancy created = vacancyRepository.save(vacancy);
+        cacheVacancy(created);
         log.info("Vacancy {} was created",vacancy);
-        return vacancy;
     }
 
+    @CachePut(value = "vacancies", key = "#vacancy.id")
+    public void cacheVacancy(Vacancy vacancy) {}
+
     @Transactional
-    @CacheEvict(value = "vacancies", allEntries = true)
+    @CacheEvict(value = "vacancies", key = "#id")
     public void deleteVacancyById(Long id)
     {
         if(!vacancyRepository.existsById(id))
@@ -82,8 +82,7 @@ public class VacancyService
     }
 
     @Transactional
-    @CachePut(value = "vacancies", key = "#id")
-    @CacheEvict(value = "vacancies", key = "'allVacancies'")
+    @CachePut(value = "companies", key = "#id")
     public void updateVacancy(Long id, VacancyCreate vacancyCreate)
     {
         Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow(()->

@@ -1,5 +1,6 @@
 package com.banurr.pet_project.service;
 
+import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
@@ -32,5 +33,12 @@ public class MinioService {
         }
     }
 
+    public byte[] getResumeFromS3(String resume) throws Exception {
+        return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(bucketName)
+                .object(resume)
+                .build())
+                .readAllBytes();
+    }
 
 }
