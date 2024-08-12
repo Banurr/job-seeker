@@ -41,7 +41,6 @@ public class VacancyService
     @Cacheable(value = "vacancies", key = "#id")
     public VacancyResponse findVacancyById(Long id)
     {
-        log.info("Id :: {}",id);
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()->
         {
             log.error("Vacancy with id {}, was not found",id);

@@ -18,10 +18,8 @@ public class Application
     @Column(name = "ID",nullable = false,unique = true)
     private Long id;
 
-    @Lob
-    @ToString.Exclude
     @Column(name = "RESUME",nullable = false)
-    private byte[] resume;
+    private String resume;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "APPLICATION_STATUS", nullable = false)

@@ -7,10 +7,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "VACANCIES")
@@ -72,5 +75,6 @@ public class Vacancy implements Serializable
     @ToString.Exclude
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vacancy",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Application> applications;
+    @Fetch(FetchMode.SELECT)
+    private Set<Application> applications;
 }

@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
+import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,22 +35,29 @@ public class ApplicationService
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private MinioService minioService;
+
     public void createApplication(Long id, MultipartFile multipartFile) throws IOException
     {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()-> new VacancyNotFoundException("Vacancy with id " + id + " not found"));
-        byte[] resume = multipartFile.getBytes();
+        InputStream inputStream = multipartFile.getInputStream();
         String email = userService.getCurrentUser().getEmail();
         if(applicationRepository.existsApplicationByEmailAndVacancy(email,vacancy))
         {
             log.error("User with email {} already have application on vacancy with id {}",email,vacancy.getId());
             throw new VacancyAlreadyExistsException("Application from user with email " + email + " to the vacancy with id " + vacancy.getId() + " already exists");
         }
+        String randomId = UUID.randomUUID().toString();
         Application application = Application.builder()
                 .email(email)
-                .resume(resume)
+                .resume(randomId)
                 .applicationStatus(ApplicationStatus.CREATED)
                 .vacancy(vacancy)
                 .build();
+
+        minioService.saveResumeToS3(randomId,inputStream,multipartFile.getSize());
+        inputStream.close();
         Application result = applicationRepository.save(application);
         String textOfCreation = "Good day\nYou applied your resume to the Job-Seeker platform\nYour application to the " + vacancy.getTitle() + " vacancy, of company " + vacancy.getCompany().getName() + " was created successfully.\nPlease wait for the response\n\nSincerely, Job-Seeker team";
         String creation = "Your application created successfully";
@@ -72,7 +80,7 @@ public class ApplicationService
     {
         Application application = findApplicationById(id);
         ApplicationView applicationView = ApplicationMapper.INSTANCE.toDto(application);
-        applicationView.setResume(Base64.getEncoder().encodeToString(applicationView.getResume()).getBytes());
+        applicationView.setResume(applicationView.getResume());
         return applicationView;
     }
 

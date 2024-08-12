@@ -13,8 +13,8 @@ import lombok.Setter;
 @Setter
 public class ApplicationView
 {
-    @Lob
-    private byte[] resume;
+
+    private String resume;
 
     @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;

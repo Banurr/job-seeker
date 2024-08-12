@@ -83,7 +83,7 @@ public class CompanyService
         company = Company.builder()
                 .id(company.getId())
                 .name(companyDto.getName())
-                .description(company.getDescription())
+                .description(companyDto.getDescription())
                 .dateOfRegistration(company.getDateOfRegistration())
                 .industry(companyDto.getIndustry())
                 .website(companyDto.getWebsite())

@@ -6,11 +6,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "COMPANIES")
@@ -49,5 +52,6 @@ public class Company implements Serializable
     @ToString.Exclude
     @JsonManagedReference
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Vacancy> vacancies;
+    @Fetch(FetchMode.SELECT)
+    private Set<Vacancy> vacancies;
 }
