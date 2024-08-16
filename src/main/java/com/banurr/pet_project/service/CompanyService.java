@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -46,7 +47,7 @@ public class CompanyService
     }
 
     @CachePut(value = "companies", key = "#id")
-    public CompanyDto findCompanyById(Long id) {
+    public CompanyDto findCompanyById(UUID id) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Company with id {} was not found", id);
@@ -58,7 +59,7 @@ public class CompanyService
 
     @Transactional
     @CacheEvict(value = "companies", key = "#id")
-    public void deleteCompanyById(Long id)
+    public void deleteCompanyById(UUID id)
     {
         if(!companyRepository.existsById(id))
         {
@@ -71,7 +72,7 @@ public class CompanyService
 
     @Transactional
     @CachePut(value = "companies", key = "#id")
-    public void updateCompany(Long id, CompanyDto companyDto)
+    public void updateCompany(UUID id, CompanyDto companyDto)
     {
         Company company = companyRepository.findById(id).orElseThrow(()->
         {

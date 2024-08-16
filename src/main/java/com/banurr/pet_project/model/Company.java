@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "COMPANIES")
@@ -24,9 +25,9 @@ import java.util.Set;
 public class Company implements Serializable
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "ID",nullable = false,unique = true)
-    private Long id;
+    private UUID id;
 
     @NotBlank(message = "Name can't be blank or null")
     @Column(name = "NAME",nullable = false)

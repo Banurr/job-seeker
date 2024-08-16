@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler
 {
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> methodArgumentTypeMismatchException()
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Input format mismatch");
+    }
 
     @ExceptionHandler(VacancyAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

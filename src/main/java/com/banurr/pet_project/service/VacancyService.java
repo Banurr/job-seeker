@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -38,7 +39,7 @@ public class VacancyService
     }
 
     @CachePut(value = "vacancies", key = "#id")
-    public VacancyResponse findVacancyById(Long id)
+    public VacancyResponse findVacancyById(UUID id)
     {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()->
         {
@@ -70,7 +71,7 @@ public class VacancyService
 
     @Transactional
     @CacheEvict(value = "vacancies", key = "#id")
-    public void deleteVacancyById(Long id)
+    public void deleteVacancyById(UUID id)
     {
         if(!vacancyRepository.existsById(id))
         {
@@ -83,7 +84,7 @@ public class VacancyService
 
     @Transactional
     @CachePut(value = "companies", key = "#id")
-    public void updateVacancy(Long id, VacancyCreate vacancyCreate)
+    public void updateVacancy(UUID id, VacancyCreate vacancyCreate)
     {
         Company company = companyRepository.findById(vacancyCreate.getCompanyId()).orElseThrow(()->
         {

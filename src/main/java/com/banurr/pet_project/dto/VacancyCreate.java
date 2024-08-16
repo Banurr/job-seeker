@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ToString
@@ -42,5 +44,5 @@ public class VacancyCreate
     private Integer maxSalary;
 
     @NotNull(message = "Company can't be null")
-    private Long companyId;
+    private UUID companyId;
 }

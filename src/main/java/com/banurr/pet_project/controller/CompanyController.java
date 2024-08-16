@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/company")
@@ -36,7 +37,7 @@ public class CompanyController
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("isAuthenticated()")
-    public CompanyDto findCompanyById(@PathVariable(name = "id") Long id)
+    public CompanyDto findCompanyById(@PathVariable(name = "id") UUID id)
     {
         return companyService.findCompanyById(id);
     }
@@ -44,7 +45,7 @@ public class CompanyController
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteCompanyById(@PathVariable(name = "id") Long id)
+    public void deleteCompanyById(@PathVariable(name = "id") UUID id)
     {
         companyService.deleteCompanyById(id);
     }
@@ -52,7 +53,7 @@ public class CompanyController
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCompany(@PathVariable(name = "id") Long id,
+    public void updateCompany(@PathVariable(name = "id") UUID id,
                               @Valid @RequestBody CompanyDto companyDto)
     {
         companyService.updateCompany(id, companyDto);

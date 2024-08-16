@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/application")
@@ -20,7 +21,7 @@ public class ApplicationController
     @PostMapping("/{vacancyId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void createApplication(@PathVariable(name = "vacancyId") Long id,
+    public void createApplication(@PathVariable(name = "vacancyId") UUID id,
                                   @RequestParam("resume") MultipartFile multipartFile) throws IOException
     {
         applicationService.createApplication(id,multipartFile);

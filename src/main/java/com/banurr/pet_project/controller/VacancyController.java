@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/vacancy")
@@ -29,7 +30,7 @@ public class VacancyController
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("isAuthenticated()")
-    public VacancyResponse findVacancyById(@PathVariable(name = "id") Long id)
+    public VacancyResponse findVacancyById(@PathVariable(name = "id") UUID id)
     {
         return vacancyService.findVacancyById(id);
     }
@@ -45,7 +46,7 @@ public class VacancyController
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
-    public void updateVacancy(@PathVariable(name = "id") Long id,
+    public void updateVacancy(@PathVariable(name = "id") UUID id,
                               @Valid @RequestBody VacancyCreate vacancyCreate)
     {
         vacancyService.updateVacancy(id, vacancyCreate);
@@ -54,7 +55,7 @@ public class VacancyController
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
 //    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_HR')")
-    public void deleteVacancy(@PathVariable(name = "id") Long id)
+    public void deleteVacancy(@PathVariable(name = "id") UUID id)
     {
         vacancyService.deleteVacancyById(id);
     }

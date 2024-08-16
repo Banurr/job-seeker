@@ -38,7 +38,7 @@ public class ApplicationService
     @Autowired
     private MinioService minioService;
 
-    public void createApplication(Long id, MultipartFile multipartFile) throws IOException
+    public void createApplication(UUID id, MultipartFile multipartFile) throws IOException
     {
         Vacancy vacancy = vacancyRepository.findById(id).orElseThrow(()-> new VacancyNotFoundException("Vacancy with id " + id + " not found"));
         InputStream inputStream = multipartFile.getInputStream();
@@ -78,7 +78,7 @@ public class ApplicationService
         return application;
     }
 
-    public ApplicationView retrieveApplicationById(Long id) throws Exception{
+    public ApplicationView retrieveApplicationById(Long id) throws Exception {
         Application application = findApplicationById(id);
         ApplicationView applicationView = ApplicationMapper.INSTANCE.toDto(application);
         applicationView.setResume(applicationView.getResume());
