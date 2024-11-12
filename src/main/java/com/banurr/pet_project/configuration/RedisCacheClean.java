@@ -15,7 +15,6 @@ public class RedisCacheClean implements CommandLineRunner {
 
     private final StringRedisTemplate redisTemplate;
 
-
     @Override
     public void run(String... args) throws Exception {
         Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection().flushDb();
